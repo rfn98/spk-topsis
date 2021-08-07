@@ -114,27 +114,109 @@
               <!-- modal body -->
               <div class="modal-body">
                 <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th scope="col">No</th>
-                        <th scope="col">Alternatif</th>
-                        <th scope="col">Kriteria</th>
-                        <th scope="col">Kriteria</th>
-                        <th scope="col">Kriteria</th>
-                        <th scope="col">Kriteria</th>
-                        <th scope="col">Kriteria</th>
-                      </tr>
-                      <tr>
-                        <th scope="row"></th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    </thead>
-                 </table>
+                  <thead>
+                    <tr>
+                      <th scope="col">No</th>
+                      <th scope="col">Alternatif</th>
+                      <?php foreach($header as $k => $v): ?>
+                      <th scope="col"><?= $v->nama_kriteria?></th>
+                      <?php endforeach; ?>
+                    </tr>
+                    <?php $no = 1; foreach($listMatrixDecision as $k => $v): ?>
+                    <tr>
+                      <td><?= $no++ ?></td>
+                      <td><?=$v->nama_alternatif?></td>
+                      <?php foreach($header as $x => $y): ?>
+                      <td><?= json_decode($v->detail)->{$y->nama_kriteria}?></td>
+                      <?php endforeach?>
+                    </tr>
+                    <?php endforeach?>
+                  </thead>
+                </table>
+              </div>
+  
+              <!-- button modal -->
+                    <div class="modal-footer">
+                        <!-- Button trigger modal hitung topsis -->
+                       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nexttopsis">
+                        Next
+                        </button>
+                  </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="nexttopsis" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">2. Data Matriks Keputusan Ternormalisasi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <!-- modal body -->
+              <div class="modal-body">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">No</th>
+                      <th scope="col">Alternatif</th>
+                      <?php foreach($header as $k => $v): ?>
+                      <th scope="col"><?= $v->nama_kriteria?></th>
+                      <?php endforeach; ?>
+                    </tr>
+                    <?php $no = 1; foreach($listMatrixDecision as $k => $v): ?>
+                    <tr>
+                      <td><?= $no++ ?></td>
+                      <td><?=$v->nama_alternatif?></td>
+                      <?php foreach($header as $x => $y): ?>
+                      <td><?= round(json_decode($v->detail)->{$y->nama_kriteria}/$headerNormalize->{$y->nama_kriteria}, 2)?></td>
+                      <?php endforeach?>
+                    </tr>
+                    <?php endforeach?>
+                  </thead>
+                </table>
+              </div>
+  
+              <!-- button modal -->
+                    <div class="modal-footer">
+                        <!-- Button trigger modal hitung topsis -->
+                       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nexttopsis2">
+                        Next
+                        </button>
+                  </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="nexttopsis2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">3. Data Matriks Keputusan Ternormalisasi Terbobot</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <!-- modal body -->
+              <div class="modal-body">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">No</th>
+                      <th scope="col">Alternatif</th>
+                      <?php foreach($header as $k => $v): ?>
+                      <th scope="col"><?= $v->nama_kriteria?></th>
+                      <?php endforeach; ?>
+                    </tr>
+                    <?php $no = 1; foreach($listMatrixDecision as $k => $v): ?>
+                    <tr>
+                      <td><?= $no++ ?></td>
+                      <td><?=$v->nama_alternatif?></td>
+                      <?php foreach($header as $x => $y): ?>
+                      <td><?= round(json_decode($v->detail)->{$y->nama_kriteria}/$headerNormalize->{$y->nama_kriteria}, 2) * $headerWeight->{$y->nama_kriteria}?></td>
+                      <?php endforeach?>
+                    </tr>
+                    <?php endforeach?>
+                  </thead>
+                </table>
               </div>
   
               <!-- button modal -->
@@ -149,32 +231,29 @@
         </div>
 
         <!-- end of modal -->
-
         <!-- tabel -->
         <table class="table table-striped">
           <thead>
             <tr>
               <th scope="col">No</th>
               <th scope="col">Alternatif</th>
-              <th scope="col">Kriteria</th>
-              <th scope="col">Kriteria</th>
-              <th scope="col">Kriteria</th>
-              <th scope="col">Kriteria</th>
-              <th scope="col">Kriteria</th>
+              <?php foreach($header as $k => $v): ?>
+              <th scope="col"><?= $v->nama_kriteria?></th>
+              <?php endforeach; ?>
               <th scope="col">Aksi</th>
             </tr>
+            <?php $no = 1; foreach($listAlternatif as $k => $v): ?>
             <tr>
-              <th scope="row"></th>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td><?= $no++ ?></td>
+              <td><?=$v->nama_alternatif?></td>
+              <?php foreach($header as $x => $y): ?>
+              <td><?= json_decode($v->detail)->{$y->nama_kriteria}?></td>
+              <?php endforeach?>
               <td><button type="button" class="btn btn-warning">Ubah</button>
               <button type="button" class="btn btn-danger">Hapus</button>
               </td>
             </tr>
+            <?php endforeach?>
           </thead>
         </table>
   </body>

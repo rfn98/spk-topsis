@@ -117,15 +117,17 @@
               <th scope="col">Bobot Kriteria</th>
               <th scope="col">Aksi</th>
             </tr>
+            <?php $no = 1; foreach($data as $k => $v): ?>
             <tr>
-              <th scope="row"></th>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td><?= $no++ ?></td>
+              <td><?= $v->kd_kriteria ?></td>
+              <td><?= $v->nama_kriteria ?></td>
+              <td><?= $v->bobot_kriteria ?></td>
               <td><button type="button" class="btn btn-warning">Ubah</button>
               <button type="button" class="btn btn-danger">Hapus</button>
               </td>
             </tr>
+            <?php endforeach?>
           </thead>
         </table>
   </body>
