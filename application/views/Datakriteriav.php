@@ -7,16 +7,21 @@
     <meta name="author" content="">
     <title>SPEK VPS</title>
 
-    <!-- Link asset-->
+    <!-- Link asset
     <link rel="stylesheet" type="text/css" href="asset/bootstrap5/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="asset/bootstrap5/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="asset/fontawesome/css/fontawesome.css">
     <link rel="stylesheet" type="text/css" href="asset/fontawesome/css/brands.css">
     <link rel="stylesheet" type="text/css" href="asset/fontawesome/css/solid.css">
     <link rel="stylesheet" type="text/css" href="asset/bootstrap5/css/stickyfooter.css">
-    <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.js"></script>
+   CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+
+    <!--<script type="text/javascript" src="asset/bootstrap5/js/bootstrap.js"></script>
     <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.bundle.min.js"></script>-->
 </head>
 
 <!-- body-->
@@ -38,8 +43,8 @@
         </button>
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
+        <div class="modal fade" role="dialog" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Tambah Kriteria</h5>
