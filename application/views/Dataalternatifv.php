@@ -48,58 +48,43 @@
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Kriteria</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Alternatif</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-
-              <!-- modal body -->
               <div class="modal-body">
-              <!-- form input modal-->
-                    <div class="mb-3 row">
-                      <label for="kodealternatif" class="col-sm-2 col-form-label">Kode Alternatif</label>
-                        <div class="col-auto">
-                        <input type="text" class="form-control" id="inputkodekriteria">
-                      </div>
+                <form class="row" method="POST" action="<?php echo base_url()?>Dataalternatif/insert">
+                  <div class="col-6">
+                    <label class="col-form-label">Kode Alternatif</label>
+                    <input class="form-control" name="kd_alternatif">
+                  </div>
+                  <div class="col-6">
+                    <label class="col-form-label">Nama Alternatif</label>
+                    <input class="form-control" name="nama_alternatif">
+                  </div>
+                  <?php foreach($listSubKriteria as $key => $value):?>
+                  <div class="col-6">
+                    <label for="kodealternatif" class="col-form-label"><?= $value->nama_kriteria?></label>
+                      <div class="col-auto">
+                        <?php if($value->is_range == 0): ?>
+                        <select class="form-control" name="<?= $value->id_kriteria?>">
+                          <option value="0">Pilih <?= $value->nama_kriteria?></option>
+                          <?php foreach(json_decode($value->list) as $k => $v):?>
+                          <option value="<?= $v->value?>"><?= $v->name?></option>
+                          <?php endforeach?>
+                        </select>
+                        <?php else:?>
+                          <input class="form-control" name="nilai_alternatif-<?= $value->id_kriteria?>">
+                        <?php endif;?>
                     </div>
-                    <div class="mb-3 row">
-                      <label for="namaalternatif" class="col-sm-2 col-form-label">Nama Alternatif</label>
-                        <div class="col-auto">
-                          <input type="text" class="form-control" id="inputnamaalternatif">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                      <label for="namakriteria" class="col-sm-2 col-form-label">Nama Kriteria</label>
-                        <div class="col-auto">
-                          <input type="text" class="form-control" id="inputnamakriteria">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                      <label for="namakriteria" class="col-sm-2 col-form-label">Nama Kriteria</label>
-                        <div class="col-auto">
-                          <input type="text" class="form-control" id="inputnamakriteria">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                      <label for="namakriteria" class="col-sm-2 col-form-label">Nama Kriteria</label>
-                        <div class="col-auto">
-                          <input type="text" class="form-control" id="inputnamakriteria">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                      <label for="namakriteria" class="col-sm-2 col-form-label">Nama Kriteria</label>
-                        <div class="col-auto">
-                          <input type="text" class="form-control" id="inputnamakriteria">
-                        </div>
-                    </div>
+                  </div>
+                  <?php endforeach?>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success">Simpan</button>
+                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
                 </div>
-
-              
-              <!-- button modal -->
-                    <div class="modal-footer">
-                            <button type="button" class="btn btn-success">Simpan</button>
-                          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
-                    </div>
-                </div>
+              </form>
+              </div>
+              </div>
             </div>
           </div>
         </div>

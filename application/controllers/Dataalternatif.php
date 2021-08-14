@@ -13,8 +13,31 @@ class Dataalternatif extends CI_Controller {
 		$this->load->view('Headerv');
 		$this->load->view('Dataalternatifv', [
 			'header' => $this->db->get('m_kriteria')->result(),
-			'listAlternatif' => $this->db->query("SELECT ad.id_alternatif, nama_alternatif, concat ('{', GROUP_CONCAT('\"', nama_kriteria, '\"', ':', '\"', case when is_range = 0 then nama_subkriteria else nilai_alternatif end, '\"'), '}') detail FROM `alternatif_detail` ad join m_subkriteria ms on ms.id_subkriteria = ad.id_sub_kriteria join m_alternatif ma on ma.id_alternatif = ad.id_alternatif join m_kriteria mk on mk.id_kriteria = ad.id_kriteria group by 1,2")->result(),
-			'listMatrixDecision' => $this->db->query("SELECT ad.id_alternatif, nama_alternatif, concat ('{', GROUP_CONCAT('\"', nama_kriteria, '\"', ':', '\"', nilai_rating, '\"'), '}') detail FROM `alternatif_detail` ad join m_subkriteria ms on ms.id_subkriteria = ad.id_sub_kriteria join m_alternatif ma on ma.id_alternatif = ad.id_alternatif join m_kriteria mk on mk.id_kriteria = ad.id_kriteria group by 1,2")->result(),
+			'listAlternatif' => $this->db->query("
+				SELECT 
+					ad.id_alternatif, nama_alternatif, CONCAT ('{', GROUP_CONCAT('\"', nama_kriteria, '\"', ':', '\"', 
+					CASE WHEN is_range = 0 THEN nama_subkriteria eLse nilai_alternatif END, '\"'), '}') detail 
+				FROM alternatif_detail ad 
+				INNER JOIN m_subkriteria ms ON ms.id_subkriteria = ad.id_sub_kriteria 
+				INNER JOIN m_alternatif ma ON ma.id_alternatif = ad.id_alternatif 
+				INNER JOIN m_kriteria mk ON mk.id_kriteria = ad.id_kriteria 
+				GROUP BY 1, 2")->result(),
+			'listSubKriteria' => $this->db->query("
+				SELECT 
+					ms.id_kriteria, mk.nama_kriteria, is_range, CONCAT(
+					'[', GROUP_CONCAT('{', '\"value\":', id_subkriteria, ',', '\"name\":', '\"', nama_subkriteria, '\"', '}'), ']'
+					) list
+				FROM m_subkriteria ms 
+				INNER JOIN m_kriteria mk ON mk.id_kriteria = ms.id_kriteria 
+				GROUP BY 1, 2, 3")->result(),
+			'listMatrixDecision' => $this->db->query("
+				SELECT 
+					ad.id_alternatif, nama_alternatif, CONCAT('{', GROUP_CONCAT('\"', nama_kriteria, '\"', ':', '\"', nilai_rating, '\"'), '}') detail 
+				FROM alternatif_detail ad 
+				INNER JOIN m_subkriteria ms ON ms.id_subkriteria = ad.id_sub_kriteria 
+				INNER JOIN m_alternatif ma ON ma.id_alternatif = ad.id_alternatif 
+				INNER JOIN m_kriteria mk ON mk.id_kriteria = ad.id_kriteria 
+				GROUP BY 1,2")->result(),
 			'headerNormalize' => $headerNormalize,
 			'headerWeight' => $headerWeight
 		]);
@@ -22,8 +45,32 @@ class Dataalternatif extends CI_Controller {
 		
 	}
 
-	/*public function test_data() {
-		echo json_encode($this->db->get('m_kriteria')->result());
-	}*/
+	public function insert() {
+		$insert = $this->db->insert('m_alternatif', ['kd_alternatif' => $_POST['kd_alternatif'], 'nama_alternatif' => $_POST['nama_alternatif']]);
+		$id = $this->db->insert_id();
+		unset($_POST['kd_alternatif']);
+		unset($_POST['nama_alternatif']);
+		foreach($_POST as $k => $v) {
+			$exp = explode('-', $k);
+			$query = "SELECT id_subkriteria FROM m_subkriteria ms 
+				INNER JOIN m_kriteria mk ON mk.id_kriteria = ms.id_kriteria 
+				WHERE is_range = 1 AND ";
+			$query .= count($exp) > 0 ? $v : $k;
+			$query .= " BETWEEN SUBSTRING_INDEX(
+				SUBSTR(REGEXP_REPLACE(REGEXP_REPLACE(nama_subkriteria, '[^0-9a-zA-Z ]', ''), '[^0-9]+', '-'), 2), '-', 1) 
+				AND SUBSTRING_INDEX(substr(REGEXP_REPLACE(REGEXP_REPLACE(nama_subkriteria, '[^0-9a-zA-Z ]', ''), '[^0-9]+', '-'), 2), '-', -1)
+			";
+			$sub_kriteria = $this->db->query($query)->result();
+			$this->db->insert('alternatif_detail', [
+				'id_alternatif' => $id, 
+				'id_kriteria' => (int)str_replace('nilai_alternatif-', '', $k), 
+				'id_sub_kriteria' => count($sub_kriteria) > 0 ? $sub_kriteria[0]->id_subkriteria : $v,
+				'nilai_alternatif' => strpos($k, 'nilai') === false ? null : $v
+			]);
+		}
+
+		return redirect('Dataalternatif');
+		// var_dump($_POST);
+	}
 }
 ?>
