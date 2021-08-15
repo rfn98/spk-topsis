@@ -109,14 +109,19 @@
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Kriteria</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Sub Kriteria {{nama_kriteria}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
               <!-- modal body -->
               <div class="modal-body row">
               <!-- form input modal-->
-                <div class="col-12">
+              <div class="col-12">
+                <button class="btn btn-sm btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#modalAddSubKriteria">
+                  Tambah
+                </button>
+              </div>
+              <div class="col-12">
                   <table class="table table-bordered">
                     <thead>
                       <tr>
@@ -133,7 +138,68 @@
                       </tr>
                     </tbody>
                   </table>
+              </div>
+              </div>
+
+              <!-- <div class="container-lg">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Tambah Data SubKriteria
+                </button> -->
+
+                <!--table modal--> 
+                  <!-- <table class="table table-striped">
+                      <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                              <th scope="col">Nama SubKriteria</th>
+                              <th scope="col">Nilai Rating</th>
+                            <th scope="col">Aksi</th>
+                          </tr>
+                            <tr>
+                              <th scope="row"></th>
+                              <td></td>
+                              <td></td>
+                              <td>
+                                <button type="button" class="btn btn-info">Tambah</button>
+                              </td>
+                            </tr>
+                        </thead>
+                    </table> -->
+
+              <!-- button modal -->
                 </div>
+            </div>
+          </div>
+          <div class="modal fade" id="modalAddSubKriteria" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Sub Kriteria {{nama_kriteria}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <!-- modal body -->
+              <div class="modal-body">
+              <!-- form input modal-->
+                <form class="row" method="POST" action="<?php echo base_url()?>Datakriteria/insertSub">
+                  <input type="hidden" class="form-control" name="id_kriteria" v-bind:value="id_kriteria">
+                    <div class="col-12">
+                      <label for="namakriteria" class="col-form-label">Nama Sub Kriteria</label>
+                        <div class="col-auto">
+                          <input type="text" class="form-control" name="nama_subkriteria">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                      <label for="bobotkriteria" class="col-form-label">Nilai Rating</label>
+                        <div class="col-auto">
+                          <input type="number" class="form-control" name="nilai_rating">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Simpan</button>
+                          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </form>
               </div>
 
               <!-- <div class="container-lg">
@@ -187,7 +253,7 @@
               <td><?= $v->nama_kriteria ?></td>
               <td><?= $v->bobot_kriteria ?></td>
               <td>
-                <button type="button" class="btn btn-success" v-on:click="getListData(<?= $v->id_kriteria ?>)" data-bs-toggle="modal" data-bs-target="#modalSubKriteria">Lihat Sub Kriteria</button>
+                <button type="button" class="btn btn-success" v-on:click="getListData(<?= $v->id_kriteria ?>, '<?= $v->nama_kriteria ?>')" data-bs-toggle="modal" data-bs-target="#modalSubKriteria">Lihat Sub Kriteria</button>
                 <button type="button" class="btn btn-warning">Ubah</button>
                 <button type="button" class="btn btn-danger">Hapus</button>
               </td>
@@ -203,16 +269,19 @@
           const vue = new Vue({
             el: '#app',
             data: {
-              listSubKriteria: null
+              listSubKriteria: null,
+              nama_kriteria: '',
+              id_kriteria: '',
             },
             methods: {
-              getListData: async id_kriteria => {
+              getListData: async (id_kriteria, nama_kriteria) => {
                 console.log(id_kriteria)
                 const data = await $.ajax({
                   url: `Datakriteria/getListSubKriteria/${id_kriteria}`,
                   dataType: 'JSON',
                 })
-
+                vue.nama_kriteria = nama_kriteria
+                vue.id_kriteria = id_kriteria
                 vue.listSubKriteria = data
               }
             }

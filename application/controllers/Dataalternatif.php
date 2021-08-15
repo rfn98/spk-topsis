@@ -12,7 +12,7 @@ class Dataalternatif extends CI_Controller {
 		foreach ($listWeight as $k => $v) $headerWeight->{$v->nama_kriteria} = $v->bobot_kriteria;
 		$this->load->view('Headerv');
 		$this->load->view('Dataalternatifv', [
-			'header' => $this->db->get('m_kriteria')->result(),
+			'header' => $this->db->query("SELECT * FROM m_kriteria WHERE id_kriteria IN (SELECT id_kriteria FROM alternatif_detail)")->result(),
 			'listAlternatif' => $this->db->query("
 				SELECT 
 					ad.id_alternatif, nama_alternatif, CONCAT ('{', GROUP_CONCAT('\"', nama_kriteria, '\"', ':', '\"', 
