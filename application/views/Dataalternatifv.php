@@ -55,11 +55,12 @@
                 <form class="row" method="POST" action="<?php echo base_url()?>Dataalternatif/insert">
                   <div class="col-6">
                     <label class="col-form-label">Kode Alternatif</label>
-                    <input class="form-control" name="kd_alternatif">
+                    <input type="hidden" class="form-control" name="id_alternatif" v-bind:value="id_alternatif">
+                    <input class="form-control" name="kd_alternatif" v-bind:value="kd_alternatif">
                   </div>
                   <div class="col-6">
                     <label class="col-form-label">Nama Alternatif</label>
-                    <input class="form-control" name="nama_alternatif">
+                    <input class="form-control" name="nama_alternatif" v-bind:value="nama_alternatif">
                   </div>
                   <?php foreach($listSubKriteria as $key => $value):?>
                   <div class="col-6">
@@ -350,41 +351,6 @@
             </div>
           </div>
         </div>
-        <!-- <div class="modal fade" id="ranking" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">7. Perankingan Alternatif</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th scope="col">No</th>
-                      <th scope="col">Nama Alternatif</th>
-                      <th scope="col">Nilai</th>
-                    </tr>
-                    <tr v-for="(item, index) in listRanking">
-                      <td>{{index + 1}}</td>
-                      <td>{{item.nama_alternatif}}</td>
-                      <td>{{item.result}}</td>
-                    </tr>
-                  </thead>
-                </table>
-              </div>
-  
-                    <div class="modal-footer">
-                       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#">
-                        Next
-                        </button>
-                  </div>
-            </div>
-          </div>
-        </div> -->
-
-        <!-- end of modal -->
-        <!-- tabel -->
         <table class="table table-striped">
           <thead>
             <tr>
@@ -402,13 +368,37 @@
               <?php foreach($header as $x => $y): ?>
               <td><?= json_decode($v->detail)->{$y->nama_kriteria}?></td>
               <?php endforeach?>
-              <td><button type="button" class="btn btn-warning">Ubah</button>
-              <button type="button" class="btn btn-danger">Hapus</button>
+              <td><button type="button" class="btn btn-warning" v-on:click="getAlternatifDetail(<?=$v->id_alternatif?>, '<?=$v->kd_alternatif?>', '<?=$v->nama_alternatif?>')" data-bs-toggle="modal" data-bs-target="#tambahdata">Ubah</button>
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAlternatif" v-on:click="id_alternatif = <?=$v->id_alternatif?>; nama_alternatif = '<?=$v->nama_alternatif?>';">Hapus</button>
               </td>
             </tr>
             <?php endforeach?>
           </thead>
         </table>
+
+        <div class="modal fade" id="deleteAlternatif" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Penghapusan Alternatif</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <!-- modal body -->
+              <div class="modal-body">
+              <!-- form input modal-->
+                <form class="row" method="POST" action="<?php echo base_url()?>Dataalternatif/delete">
+                    <span>Anda yakin ingin menghapus alternatif {{nama_alternatif}} ?</span>
+                    <input type="hidden" name="id_alternatif" v-bind:value="id_alternatif">
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-success">YES</button>
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </form>
+              </div>
+                </div>
+            </div>
+          </div>
   </div>
         <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
   <script type="text/javascript">
@@ -419,7 +409,24 @@
         listAlternatifPlus: null,
         listAlternatifMinus: null,
         listPreferences: null,
-        listRanking: null
+        listRanking: null,
+        id_alternatif: null,
+        kd_alternatif: null,
+        nama_alternatif: null,
+        detail: null
+      },
+      methods: {
+        getAlternatifDetail: async (id_alternatif, kd_alternatif, nama_alternatif) => {
+          const data = await $.ajax({url: 'Dataalternatif/getAlternatifDetail/' + id_alternatif, dataType: 'JSON'})
+          for (const idx in data) {
+            $(`[name="${data[idx].id_kriteria}"]`).val(data[idx].id_sub_kriteria)
+            $(`[name="nilai_alternatif-${data[idx].id_kriteria}"]`).val(data[idx].nilai_alternatif)
+          }
+          vue.kd_alternatif = kd_alternatif
+          vue.id_alternatif = id_alternatif
+          vue.nama_alternatif = nama_alternatif
+          console.log(data)
+        }
       },
       async mounted() {
         const list = []

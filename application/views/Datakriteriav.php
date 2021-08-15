@@ -34,7 +34,7 @@
          </nav>
           
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" v-on:click="id_kriteria = 0">
         Tambah
         </button>
 
@@ -43,7 +43,7 @@
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Kriteria</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{id_kriteria ? 'Edit' : 'Tambah'}} Kriteria</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
@@ -54,19 +54,20 @@
                     <div class="col-12">
                       <label for="kodekriteria" class="col-sm-2 col-form-label">Kode Kriteria</label>
                         <div class="col-auto">
-                        <input type="text" class="form-control" name="kd_kriteria">
+                        <input type="hidden" class="form-control" name="id_kriteria" v-bind:value="id_kriteria">
+                        <input type="text" class="form-control" name="kd_kriteria" v-bind:value="kd_kriteria">
                       </div>
                     </div>
                     <div class="col-12">
                       <label for="namakriteria" class="col-sm-2 col-form-label">Nama Kriteria</label>
                         <div class="col-auto">
-                          <input type="text" class="form-control" name="nama_kriteria">
+                          <input type="text" class="form-control" name="nama_kriteria" v-bind:value="nama_kriteria">
                         </div>
                     </div>
                     <div class="col-12">
                       <label for="bobotkriteria" class="col-sm-2 col-form-label">Bobot Kriteria</label>
                         <div class="col-auto">
-                          <input type="text" class="form-control" name="bobot_kriteria">
+                          <input type="text" class="form-control" name="bobot_kriteria" v-bind:value="bobot_kriteria">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -105,6 +106,30 @@
                 </div>
             </div>
           </div>
+
+          <div class="modal fade" id="deleteKriteria" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Penghapusan Kriteria</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <!-- modal body -->
+              <div class="modal-body">
+              <!-- form input modal-->
+                <form class="row" method="POST" action="<?php echo base_url()?>Datakriteria/delete">
+                    <span>Anda yakin ingin menghapus kriteria {{nama_kriteria}} ?</span>
+                    <input type="hidden" name="id_kriteria" v-bind:value="id_kriteria">
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-success">YES</button>
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </form>
+              </div>
+                </div>
+            </div>
+          </div>
           <div class="modal fade" id="modalSubKriteria" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -117,7 +142,7 @@
               <div class="modal-body row">
               <!-- form input modal-->
               <div class="col-12">
-                <button class="btn btn-sm btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#modalAddSubKriteria">
+                <button class="btn btn-sm btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#modalAddSubKriteria" v-on:click="id_subkriteria = 0">
                   Tambah
                 </button>
               </div>
@@ -128,6 +153,7 @@
                         <th>No</th>
                         <th>Nama Sub Kriteria</th>
                         <th>Nilai Rating</th>
+                        <th>Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -135,6 +161,10 @@
                         <td>{{index + 1}}</td>
                         <td>{{item.nama_subkriteria}}</td>
                         <td>{{item.nilai_rating}}</td>
+                        <td>
+                          <button type="button" class="btn btn-warning" data-bs-target="#modalAddSubKriteria" data-bs-toggle="modal" v-on:click="id_subkriteria = item.id_subkriteria; nama_subkriteria = item.nama_subkriteria; nilai_rating = item.nilai_rating">Ubah</button>
+                          <button type="button" class="btn btn-danger" data-bs-target="#deleteSubKriteria" data-bs-toggle="modal" v-on:click="id_subkriteria = item.id_subkriteria; nama_subkriteria = item.nama_subkriteria;">Hapus</button>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -170,11 +200,34 @@
                 </div>
             </div>
           </div>
+          <div class="modal fade" id="deleteSubKriteria" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Penghapusan Sub Kriteria Kriteria</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <!-- modal body -->
+              <div class="modal-body">
+              <!-- form input modal-->
+                <form class="row" method="POST" action="<?php echo base_url()?>Datakriteria/deleteSub">
+                    <span>Anda yakin ingin menghapus sub kriteria {{nama_subkriteria}} ?</span>
+                    <input type="hidden" name="id_subkriteria" v-bind:value="id_subkriteria">
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-success">YES</button>
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
+                    </div>
+                </form>
+              </div>
+                </div>
+            </div>
+          </div>
           <div class="modal fade" id="modalAddSubKriteria" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Sub Kriteria {{nama_kriteria}}</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{id_subkriteria ? 'Edit' : 'Tambah'}} Sub Kriteria</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
@@ -186,13 +239,14 @@
                     <div class="col-12">
                       <label for="namakriteria" class="col-form-label">Nama Sub Kriteria</label>
                         <div class="col-auto">
-                          <input type="text" class="form-control" name="nama_subkriteria">
+                          <input type="hidden" class="form-control" name="id_subkriteria" v-bind:value="id_subkriteria">
+                          <input type="text" class="form-control" name="nama_subkriteria" v-bind:value="nama_subkriteria">
                         </div>
                     </div>
                     <div class="col-12">
                       <label for="bobotkriteria" class="col-form-label">Nilai Rating</label>
                         <div class="col-auto">
-                          <input type="number" class="form-control" name="nilai_rating">
+                          <input type="number" class="form-control" name="nilai_rating" v-bind:value="nilai_rating">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -254,8 +308,8 @@
               <td><?= $v->bobot_kriteria ?></td>
               <td>
                 <button type="button" class="btn btn-success" v-on:click="getListData(<?= $v->id_kriteria ?>, '<?= $v->nama_kriteria ?>')" data-bs-toggle="modal" data-bs-target="#modalSubKriteria">Lihat Sub Kriteria</button>
-                <button type="button" class="btn btn-warning">Ubah</button>
-                <button type="button" class="btn btn-danger">Hapus</button>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal" v-on:click="id_kriteria = <?= $v->id_kriteria ?>; kd_kriteria = '<?= $v->kd_kriteria ?>'; nama_kriteria = '<?= $v->nama_kriteria ?>'; bobot_kriteria = <?= $v->bobot_kriteria ?>;">Ubah</button>
+                <button type="button" class="btn btn-danger" data-bs-target="#deleteKriteria" data-bs-toggle="modal" v-on:click="id_kriteria = <?= $v->id_kriteria ?>; nama_kriteria = '<?= $v->nama_kriteria ?>';">Hapus</button>
               </td>
             </tr>
             <?php endforeach?>
@@ -271,7 +325,12 @@
             data: {
               listSubKriteria: null,
               nama_kriteria: '',
-              id_kriteria: '',
+              id_kriteria: 0,
+              nama_subkriteria: '',
+              id_subkriteria: 0,
+              kd_kriteria: '',
+              bobot_kriteria: '',
+              nilai_rating: ''
             },
             methods: {
               getListData: async (id_kriteria, nama_kriteria) => {
