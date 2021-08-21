@@ -18,7 +18,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
-
+<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>
     <!--<script type="text/javascript" src="asset/bootstrap5/js/bootstrap.js"></script>
     <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.bundle.min.js"></script>-->
@@ -39,7 +39,7 @@
          </nav>
           
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" v-on:click="id_kriteria = 0">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" v-on:click="id_kriteria = 0; resetForm('kriteria')">
         Tambah
         </button>
 
@@ -60,24 +60,24 @@
                       <label for="kodekriteria" class="col-sm-2 col-form-label">Kode Kriteria</label>
                         <div class="col-auto">
                         <input type="hidden" class="form-control" name="id_kriteria" v-bind:value="id_kriteria">
-                        <input type="text" class="form-control" name="kd_kriteria" v-bind:value="kd_kriteria">
+                        <input type="text" class="form-control field-kriteria" name="kd_kriteria" v-model="kd_kriteria">
                       </div>
                     </div>
                     <div class="col-12">
                       <label for="namakriteria" class="col-sm-2 col-form-label">Nama Kriteria</label>
                         <div class="col-auto">
-                          <input type="text" class="form-control" name="nama_kriteria" v-bind:value="nama_kriteria">
+                          <input type="text" class="form-control field-kriteria" name="nama_kriteria" v-model="nama_kriteria">
                         </div>
                     </div>
                     <div class="col-12">
                       <label for="bobotkriteria" class="col-sm-2 col-form-label">Bobot Kriteria</label>
                         <div class="col-auto">
-                          <input type="text" class="form-control" name="bobot_kriteria" v-bind:value="bobot_kriteria">
+                          <input type="text" class="form-control field-kriteria" name="bobot_kriteria" v-model="bobot_kriteria">
                         </div>
                     </div>
                     <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">Simpan</button>
-                          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
+                      <button v-bind:type="!kd_kriteria.length || !nama_kriteria.length || !bobot_kriteria.length ? 'button' : 'submit'" class="btn btn-success btn-simpan-kriteria" v-on:click="showError('kriteria')">Simpan</button>
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
                     </div>
                 </form>
               </div>
@@ -147,7 +147,7 @@
               <div class="modal-body row">
               <!-- form input modal-->
               <div class="col-12">
-                <button class="btn btn-sm btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#modalAddSubKriteria" v-on:click="id_subkriteria = 0">
+                <button class="btn btn-sm btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#modalAddSubKriteria" v-on:click="id_subkriteria = 0; resetForm('subkriteria')">
                   Tambah
                 </button>
               </div>
@@ -240,23 +240,23 @@
               <div class="modal-body">
               <!-- form input modal-->
                 <form class="row" method="POST" action="<?php echo base_url()?>Datakriteria/insertSub">
-                  <input type="hidden" class="form-control" name="id_kriteria" v-bind:value="id_kriteria">
                     <div class="col-12">
                       <label for="namakriteria" class="col-form-label">Nama Sub Kriteria</label>
                         <div class="col-auto">
-                          <input type="hidden" class="form-control" name="id_subkriteria" v-bind:value="id_subkriteria">
-                          <input type="text" class="form-control" name="nama_subkriteria" v-bind:value="nama_subkriteria">
+                          <input type="hidden" class="form-control" name="id_kriteria" v-bind:value="id_kriteria">
+                          <input type="hidden" class="form-control" name="id_subkriteria" id="id_subkriteria" v-bind:value="id_subkriteria">
+                          <input type="text" class="form-control field-subkriteria" name="nama_subkriteria" v-model="nama_subkriteria">
                         </div>
                     </div>
                     <div class="col-12">
                       <label for="bobotkriteria" class="col-form-label">Nilai Rating</label>
                         <div class="col-auto">
-                          <input type="number" class="form-control" name="nilai_rating" v-bind:value="nilai_rating">
+                          <input type="number" class="form-control field-subkriteria" name="nilai_rating" v-model="nilai_rating">
                         </div>
                     </div>
                     <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">Simpan</button>
-                          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
+                      <button v-bind:type="!nama_subkriteria.length || !nilai_rating.length ? 'button' : 'submit'" v-on:click="showError('subkriteria')" class="btn btn-success btn-simpan-subkriteria">Simpan</button>
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
                     </div>
                 </form>
               </div>
@@ -335,7 +335,8 @@
               id_subkriteria: 0,
               kd_kriteria: '',
               bobot_kriteria: '',
-              nilai_rating: ''
+              nilai_rating: '',
+
             },
             methods: {
               getListData: async (id_kriteria, nama_kriteria) => {
@@ -347,6 +348,12 @@
                 vue.nama_kriteria = nama_kriteria
                 vue.id_kriteria = id_kriteria
                 vue.listSubKriteria = data
+              },
+              resetForm: entity => {
+                setTimeout(() => $('.field-' + entity).each((idx, el) => $(el).val('')), 100)
+              },
+              showError: entity => {
+                if($('.btn-simpan-' + entity).attr('type') == 'button') Swal.fire({title: 'Semua Data Wajib Diisi!', icon:'error'})
               }
             }
           })

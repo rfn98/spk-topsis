@@ -15,7 +15,20 @@ class Datakriteria extends CI_Controller {
 			$this->db->where('id_kriteria', $_POST['id_kriteria'])->update('m_kriteria', $_POST);
 		else 
 			$this->db->insert('m_kriteria', $_POST);
-		return redirect('Datakriteria');
+		$this->showAlert('Kriteria', $_POST['id_kriteria'] ? 'ubah' : 'simpan');
+	}
+
+	public function showAlert($entity, $action) {
+		echo "
+		<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'>
+		</script><script type='text/javascript'>
+			setTimeout(() => Swal.fire({
+				title: 'Data {$entity} Berhasil Di{$action}!',
+				icon: 'success'
+			}).then((result) => {
+				if (result.isConfirmed) window.location = 'http://localhost/spk/Datakriteria'
+			}), 500)
+		</script>";
 	}
 
 	public function insertSub() {
@@ -23,7 +36,7 @@ class Datakriteria extends CI_Controller {
 			$this->db->where('id_subkriteria', $_POST['id_subkriteria'])->update('m_subkriteria', $_POST);
 		else 
 			$this->db->insert('m_subkriteria', $_POST);
-		return redirect('Datakriteria');
+		$this->showAlert('Sub Kriteria', $_POST['id_subkriteria'] ? 'ubah' : 'simpan');
 	}
 
 	public function getListSubKriteria($id)	{
@@ -34,12 +47,12 @@ class Datakriteria extends CI_Controller {
 		$this->db->where('id_kriteria', $_POST['id_kriteria'])->delete('alternatif_detail');
 		$this->db->where('id_kriteria', $_POST['id_kriteria'])->delete('m_subkriteria');
 		$this->db->where('id_kriteria', $_POST['id_kriteria'])->delete('m_kriteria');
-		return redirect('Datakriteria');
+		$this->showAlert('Kriteria', 'hapus');
 	}
 
 	public function deleteSub() {
 		$this->db->where('id_subkriteria', $_POST['id_subkriteria'])->delete('m_subkriteria');
-		return redirect('Datakriteria');
+		$this->showAlert('Sub Kriteria', 'hapus');
 	}
 
 	/*public function test_data() {

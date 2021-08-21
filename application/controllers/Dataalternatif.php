@@ -2,8 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Dataalternatif extends CI_Controller {
-    public function index()
-	{
+    public function index() {
 		$headerNormalize = new StdClass();
 		$headerWeight = new StdClass();
 		$list = $this->db->query("SELECT nama_kriteria, round(sqrt(sum(nilai_rating*nilai_rating)), 2) detail FROM `alternatif_detail` ad join m_subkriteria ms on ms.id_subkriteria = ad.id_sub_kriteria join m_alternatif ma on ma.id_alternatif = ad.id_alternatif join m_kriteria mk on mk.id_kriteria = ad.id_kriteria group by 1")->result();
@@ -55,8 +54,8 @@ class Dataalternatif extends CI_Controller {
 				'nama_alternatif' => $_POST['nama_alternatif']
 			]);
 			$id = $_POST['id_alternatif'];
-		}
-		else {
+			$is_update = true;
+		} else {
 			$insert = $this->db->insert('m_alternatif', ['kd_alternatif' => $_POST['kd_alternatif'], 'nama_alternatif' => $_POST['nama_alternatif']]);
 			$id = $this->db->insert_id();
 		}
@@ -87,18 +86,33 @@ class Dataalternatif extends CI_Controller {
 			]);
 		}
 
-		return redirect('Dataalternatif');
+		$this->showAlert('Alternatif', $is_update ? 'ubah' : 'simpan');
+
+		// return redirect('Dataalternatif');
 		// var_dump($_POST);
 	}
 
 	public function delete() {
 		$this->db->where('id_alternatif', $_POST['id_alternatif'])->delete('alternatif_detail');
 		$this->db->where('id_alternatif', $_POST['id_alternatif'])->delete('m_alternatif');
-		return redirect('Dataalternatif');
+		$this->showAlert('Alternatif', 'hapus');
 	}
 
 	public function getAlternatifDetail($id_alternatif) {
 		echo json_encode($this->db->get_where('alternatif_detail', ['id_alternatif' => $id_alternatif])->result());
+	}
+
+	public function showAlert($entity, $action) {
+		echo "
+		<script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+		<script type='text/javascript'>
+			setTimeout(() => Swal.fire({
+				title: 'Data {$entity} Berhasil Di{$action}!',
+				icon: 'success'
+			}).then((result) => {
+				if (result.isConfirmed) window.location = 'http://localhost/spk/Dataalternatif'
+			}), 500)
+		</script>";
 	}
 }
 ?>

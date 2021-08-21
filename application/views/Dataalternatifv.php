@@ -17,7 +17,7 @@
     <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.js"></script>
     <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.bundle.min.js"></script>
-    <script src="asset/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="asset/jquery-3.6.0.js"></script>
 </head>
 
 <!-- body-->
@@ -35,7 +35,7 @@
          </nav>
           
         <!-- Button trigger modal tambah data -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahdata">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahdata" v-on:click="resetForm()">
         Tambah
         </button>
         <!-- Button trigger modal hitung topsis -->
@@ -55,32 +55,32 @@
                 <form class="row" method="POST" action="<?php echo base_url()?>Dataalternatif/insert">
                   <div class="col-6">
                     <label class="col-form-label">Kode Alternatif</label>
-                    <input type="hidden" class="form-control" name="id_alternatif" v-bind:value="id_alternatif">
-                    <input class="form-control" name="kd_alternatif" v-bind:value="kd_alternatif">
+                    <input type="hidden" class="form-control" name="id_alternatif" id="id_alternatif" v-bind:value="id_alternatif">
+                    <input class="form-control field-alternatif" name="kd_alternatif" id="kd_alternatif" v-bind:value="kd_alternatif">
                   </div>
                   <div class="col-6">
                     <label class="col-form-label">Nama Alternatif</label>
-                    <input class="form-control" name="nama_alternatif" v-bind:value="nama_alternatif">
+                    <input class="form-control field-alternatif" name="nama_alternatif" id="nama_alternatif" v-bind:value="nama_alternatif">
                   </div>
                   <?php foreach($listSubKriteria as $key => $value):?>
                   <div class="col-6">
                     <label for="kodealternatif" class="col-form-label"><?= $value->nama_kriteria?></label>
                       <div class="col-auto">
                         <?php if($value->is_range == 0): ?>
-                        <select class="form-control" name="<?= $value->id_kriteria?>">
+                        <select class="form-control field-alternatif" name="<?= $value->id_kriteria?>" id="<?= $value->id_kriteria?>">
                           <option value="0">Pilih <?= $value->nama_kriteria?></option>
                           <?php foreach(json_decode($value->list) as $k => $v):?>
                           <option value="<?= $v->value?>"><?= $v->name?></option>
                           <?php endforeach?>
                         </select>
                         <?php else:?>
-                          <input class="form-control" name="nilai_alternatif-<?= $value->id_kriteria?>">
+                          <input class="form-control field-alternatif" name="nilai_alternatif-<?= $value->id_kriteria?>" id="nilai_alternatif-<?= $value->id_kriteria?>">
                         <?php endif;?>
                     </div>
                   </div>
                   <?php endforeach?>
                 <div class="modal-footer">
-                  <button type="submit" class="btn btn-success">Simpan</button>
+                  <button type="button" class="btn btn-success btn-simpan-alternatif">Simpan</button>
                   <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
                 </div>
               </form>
@@ -450,7 +450,8 @@
         kd_alternatif: null,
         nama_alternatif: null,
         detail: null,
-        listRank: null
+        listRank: null,
+        alternatifData: {}
       },
       methods: {
         getAlternatifDetail: async (id_alternatif, kd_alternatif, nama_alternatif) => {
@@ -469,6 +470,15 @@
         },
         reload: () => {
           location.reload()
+        },
+        resetForm: () => {
+          $('#id_alternatif').val(0)
+          $('.field-alternatif').each((idx, el) => $(el).val($(`#${$(el).attr('id')}`).html().length ? 0 : ''))
+        },
+        changeTypeButton() {
+          const emptyList = []
+          $('.field-alternatif').each((idx, el) => emptyList.push($(el).val()))
+          if (!emptyList.filter(r => [0, ''].includes(r)).length) $('.btn-simpan-alternatif').attr('type', 'submit')
         }
       },
       async mounted() {
