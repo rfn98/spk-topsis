@@ -48,7 +48,7 @@
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{id_kriteria ? 'Edit' : 'Tambah'}} Kriteria</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{id_kriteria ? 'Ubah' : 'Tambah'}} Kriteria</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
@@ -232,7 +232,7 @@
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{id_subkriteria ? 'Edit' : 'Tambah'}} Sub Kriteria</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{id_subkriteria ? 'Ubah' : 'Tambah'}} Sub Kriteria</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
@@ -312,7 +312,7 @@
               <td><?= $v->nama_kriteria ?></td>
               <td><?= $v->bobot_kriteria ?></td>
               <td>
-                <button type="button" class="btn btn-success" v-on:click="getListData(<?= $v->id_kriteria ?>, '<?= $v->nama_kriteria ?>')" data-bs-toggle="modal" data-bs-target="#modalSubKriteria">Lihat Sub Kriteria</button>
+                <button type="button" class="btn btn-success" v-on:click="getListData(<?= $v->id_kriteria ?>, '<?= $v->nama_kriteria ?>')" data-bs-toggle="modal" data-bs-target="#modalSubKriteria">Sub Kriteria</button>
                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal" v-on:click="id_kriteria = <?= $v->id_kriteria ?>; kd_kriteria = '<?= $v->kd_kriteria ?>'; nama_kriteria = '<?= $v->nama_kriteria ?>'; bobot_kriteria = <?= $v->bobot_kriteria ?>;">Ubah</button>
                 <button type="button" class="btn btn-danger" data-bs-target="#deleteKriteria" data-bs-toggle="modal" v-on:click="id_kriteria = <?= $v->id_kriteria ?>; nama_kriteria = '<?= $v->nama_kriteria ?>';">Hapus</button>
               </td>

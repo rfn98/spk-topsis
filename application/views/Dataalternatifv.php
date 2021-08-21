@@ -17,7 +17,7 @@
     <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.js"></script>
     <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="asset/bootstrap5/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="asset/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 </head>
 
 <!-- body-->
@@ -48,7 +48,7 @@
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Alternatif</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Form Alternatif</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
@@ -344,8 +344,44 @@
               <!-- button modal -->
                     <div class="modal-footer">
                         <!-- Button trigger modal hitung topsis -->
-                       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ranking">
+                       <button type="button" class="btn btn-primary" v-on:click="sortAlternatif()" data-bs-toggle="modal" data-bs-target="#ranking">
                         Next
+                        </button>
+                  </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="ranking" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">7. Perangkingan alternatif</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <!-- modal body -->
+              <div class="modal-body">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">No</th>
+                      <th scope="col">Nama Alternatif</th>
+                      <th scope="col">Nilai Preferensi</th>
+                    </tr>
+                    <tr v-for="(item, index) in listPreferences">
+                      <td>{{index + 1}}</td>
+                      <td>{{item.nama_alternatif}}</td>
+                      <td>{{item.result}}</td>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+  
+              <!-- button modal -->
+                    <div class="modal-footer">
+                        <!-- Button trigger modal hitung topsis -->
+                       <button type="button" class="btn btn-primary" v-on:click="reload()" data-bs-toggle="modal" data-bs-target="#ranking">
+                        Selesai
                         </button>
                   </div>
             </div>
@@ -400,7 +436,7 @@
             </div>
           </div>
   </div>
-        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <script src="asset/vue.js"></script>
   <script type="text/javascript">
     const vue = new Vue({
       el: '#app',
@@ -413,7 +449,8 @@
         id_alternatif: null,
         kd_alternatif: null,
         nama_alternatif: null,
-        detail: null
+        detail: null,
+        listRank: null
       },
       methods: {
         getAlternatifDetail: async (id_alternatif, kd_alternatif, nama_alternatif) => {
@@ -426,6 +463,12 @@
           vue.id_alternatif = id_alternatif
           vue.nama_alternatif = nama_alternatif
           console.log(data)
+        },
+        sortAlternatif: () => {
+          vue.listPreferences.sort((a, b) =>  b.result - a.result)
+        },
+        reload: () => {
+          location.reload()
         }
       },
       async mounted() {
@@ -467,7 +510,6 @@
         for (const idx in this.listPreferences) this.listPreferences[idx].result = (
           eval(this.listPreferences[idx].result_minus)/(eval(this.listPreferences[idx].result_minus) + eval(this.listPreferences[idx].result_plus))
         ).toFixed(2)
-        this.listPreferences.sort((a, b) => b.result - a.result)
       }
     })
   </script>

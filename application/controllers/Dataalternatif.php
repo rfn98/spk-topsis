@@ -11,6 +11,7 @@ class Dataalternatif extends CI_Controller {
 		foreach ($list as $k => $v) $headerNormalize->{$v->nama_kriteria} = $v->detail;
 		foreach ($listWeight as $k => $v) $headerWeight->{$v->nama_kriteria} = $v->bobot_kriteria;
 		$this->load->view('Headerv');
+		$this->load->view('Footerv');
 		$this->load->view('Dataalternatifv', [
 			'header' => $this->db->query("SELECT * FROM m_kriteria WHERE id_kriteria IN (SELECT id_kriteria FROM alternatif_detail)")->result(),
 			'listAlternatif' => $this->db->query("
@@ -41,8 +42,6 @@ class Dataalternatif extends CI_Controller {
 			'headerNormalize' => $headerNormalize,
 			'headerWeight' => $headerWeight
 		]);
-		$this->load->view('Footerv');
-		
 	}
 
 	public function insert() {
