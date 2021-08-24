@@ -80,7 +80,7 @@
                   </div>
                   <?php endforeach?>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-success btn-simpan-alternatif">Simpan</button>
+                  <button type="button" class="btn btn-success btn-simpan-alternatif" v-on:click="showError()">Simpan</button>
                   <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
                 </div>
               </form>
@@ -436,7 +436,8 @@
             </div>
           </div>
   </div>
-        <script src="asset/vue.js"></script>
+  <script src="asset/vue.js"></script>
+  <script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>
   <script type="text/javascript">
     const vue = new Vue({
       el: '#app',
@@ -451,7 +452,8 @@
         nama_alternatif: null,
         detail: null,
         listRank: null,
-        alternatifData: {}
+        alternatifData: {},
+        emptyInputList: []
       },
       methods: {
         getAlternatifDetail: async (id_alternatif, kd_alternatif, nama_alternatif) => {
@@ -475,10 +477,11 @@
           $('#id_alternatif').val(0)
           $('.field-alternatif').each((idx, el) => $(el).val($(`#${$(el).attr('id')}`).html().length ? 0 : ''))
         },
-        changeTypeButton() {
-          const emptyList = []
-          $('.field-alternatif').each((idx, el) => emptyList.push($(el).val()))
-          if (!emptyList.filter(r => [0, ''].includes(r)).length) $('.btn-simpan-alternatif').attr('type', 'submit')
+        showError: () => {
+          if($('.field-alternatif').toArray().map(r => $(r).val()).filter(s => !s.length).length) 
+            Swal.fire({title: 'Semua Data Wajib Diisi!', icon:'error'})
+          else 
+            $('.btn-simpan-alternatif').attr('type', 'submit')
         }
       },
       async mounted() {
@@ -520,8 +523,15 @@
         for (const idx in this.listPreferences) this.listPreferences[idx].result = (
           eval(this.listPreferences[idx].result_minus)/(eval(this.listPreferences[idx].result_minus) + eval(this.listPreferences[idx].result_plus))
         ).toFixed(2)
-      }
+      },
+      /*watch: {
+        emptyInputList: function (val) {
+          // this.emptyInputList = val
+          console.log('WKWKWKWKWKWKWKWK')
+        }
+      }*/
     })
+    // vue.emptyInputList = $('.field-alternatif').toArray().map(r => $(r).val()).filter(s => !s.length).length
   </script>
   </body>
 </html>
