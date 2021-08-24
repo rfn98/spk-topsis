@@ -39,7 +39,10 @@
         Tambah
         </button>
         <!-- Button trigger modal hitung topsis -->
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#hitungtopsis">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#hitungtopsis" v-if="total_weight == 100">
+        Hitung TOPSIS
+        </button>
+        <button type="button" class="btn btn-success" v-on:click="showAlert()" v-if="total_weight != 100">
         Hitung TOPSIS
         </button>
 
@@ -453,7 +456,8 @@
         detail: null,
         listRank: null,
         alternatifData: {},
-        emptyInputList: []
+        emptyInputList: [],
+        total_weight: localStorage.total_weight
       },
       methods: {
         getAlternatifDetail: async (id_alternatif, kd_alternatif, nama_alternatif) => {
@@ -482,6 +486,13 @@
             Swal.fire({title: 'Semua Data Wajib Diisi!', icon:'error'})
           else 
             $('.btn-simpan-alternatif').attr('type', 'submit')
+        },
+        showAlert: () => {
+          Swal.fire({
+            icon:'error',
+            title: 'Kesalahan',
+            text: 'Menurut aturan metode TOPSIS, total bobotnya harus sama dengan 100!'
+          })
         }
       },
       async mounted() {

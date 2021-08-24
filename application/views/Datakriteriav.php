@@ -318,6 +318,10 @@
               </td>
             </tr>
             <?php endforeach?>
+            <tr>
+              <td colspan="3" align="center"><strong>TOTAL</strong></td>
+              <td colspan="2">{{total_weight}}</td>
+            </tr>
           </thead>
         </table>
       </div>
@@ -336,7 +340,7 @@
               kd_kriteria: '',
               bobot_kriteria: '',
               nilai_rating: '',
-
+              total_weight: <?= json_encode($data) ?>.map(r => eval(r.bobot_kriteria)).reduce((a, b) => a + b)
             },
             methods: {
               getListData: async (id_kriteria, nama_kriteria) => {
@@ -355,6 +359,9 @@
               showError: entity => {
                 if($('.btn-simpan-' + entity).attr('type') == 'button') Swal.fire({title: 'Semua Data Wajib Diisi!', icon:'error'})
               }
+            },
+            mounted() {
+              localStorage.total_weight = this.total_weight
             }
           })
         </script>
