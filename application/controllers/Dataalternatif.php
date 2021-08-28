@@ -74,16 +74,20 @@ class Dataalternatif extends CI_Controller {
 				AND SUBSTRING_INDEX(substr(REGEXP_REPLACE(REGEXP_REPLACE(nama_subkriteria, '[^0-9a-zA-Z ]', ''), '[^0-9]+', '-'), 2), '-', -1)
 			";
 			$sub_kriteria = $this->db->query($query)->result();
-			if (!$is_update) $this->db->insert('alternatif_detail', [
+			$insertDetail = $this->db->insert('alternatif_detail', [
 				'id_alternatif' => $id, 
 				'id_kriteria' => (int)str_replace('nilai_alternatif-', '', $k), 
 				'id_sub_kriteria' => count($sub_kriteria) > 0 ? $sub_kriteria[0]->id_subkriteria : $v,
 				'nilai_alternatif' => strpos($k, 'nilai') === false ? null : $v
-			]); else $this->db->where(['id_alternatif' => $id, 'id_kriteria' => (int)str_replace('nilai_alternatif-', '', $k)])
+			]);
+			$updateDetail = $this->db->where(['id_alternatif' => $id, 'id_kriteria' => (int)str_replace('nilai_alternatif-', '', $k)])
 				->update('alternatif_detail', [
 				'id_sub_kriteria' => count($sub_kriteria) > 0 ? $sub_kriteria[0]->id_subkriteria : $v,
 				'nilai_alternatif' => strpos($k, 'nilai') === false ? null : $v
 			]);
+			$checkAlternatifDetail = $this->db->get_where('alternatif_detail', ['id_alternatif' => $id, 'id_kriteria' => (int)str_replace('nilai_alternatif-', '', $k)])->result();
+			if (!$is_update) $insert_detail; 
+			else count($checkAlternatifDetail) ? $updateDetail : $insertDetail;
 		}
 
 		$this->showAlert('Alternatif', $is_update ? 'ubah' : 'simpan');

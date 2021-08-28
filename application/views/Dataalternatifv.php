@@ -39,10 +39,10 @@
         Tambah
         </button>
         <!-- Button trigger modal hitung topsis -->
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#hitungtopsis" v-if="total_weight == 100">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#hitungtopsis" v-if="total_weight == 100 && !is_empty">
         Hitung TOPSIS
         </button>
-        <button type="button" class="btn btn-success" v-on:click="showAlert()" v-if="total_weight != 100">
+        <button type="button" class="btn btn-success" v-on:click="showAlert()" v-if="total_weight != 100 || is_empty">
         Hitung TOPSIS
         </button>
 
@@ -77,7 +77,7 @@
                           <?php endforeach?>
                         </select>
                         <?php else:?>
-                          <input class="form-control field-alternatif" name="nilai_alternatif-<?= $value->id_kriteria?>" id="nilai_alternatif-<?= $value->id_kriteria?>">
+                          <input class="form-control field-alternatif" v-model="range_field" v-on:keyup="emptyField()" name="nilai_alternatif-<?= $value->id_kriteria?>" id="nilai_alternatif-<?= $value->id_kriteria?>">
                         <?php endif;?>
                     </div>
                   </div>
@@ -405,7 +405,7 @@
               <td><?= $no++ ?></td>
               <td><?=$v->nama_alternatif?></td>
               <?php foreach($header as $x => $y): ?>
-              <td><?= json_decode($v->detail)->{$y->nama_kriteria}?></td>
+              <td class="td-nilai-alternatif"><?= isset(json_decode($v->detail)->{$y->nama_kriteria}) ? json_decode($v->detail)->{$y->nama_kriteria} : '-' ?></td>
               <?php endforeach?>
               <td><button type="button" class="btn btn-warning" v-on:click="getAlternatifDetail(<?=$v->id_alternatif?>, '<?=$v->kd_alternatif?>', '<?=$v->nama_alternatif?>')" data-bs-toggle="modal" data-bs-target="#tambahdata">Ubah</button>
               <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAlternatif" v-on:click="id_alternatif = <?=$v->id_alternatif?>; nama_alternatif = '<?=$v->nama_alternatif?>';">Hapus</button>
@@ -457,7 +457,9 @@
         listRank: null,
         alternatifData: {},
         emptyInputList: [],
-        total_weight: localStorage.total_weight
+        total_weight: localStorage.total_weight,
+        is_empty: $('.td-nilai-alternatif').toArray().map(r => $(r).text()).filter(s => s == '-').length,
+        range_field: null
       },
       methods: {
         getAlternatifDetail: async (id_alternatif, kd_alternatif, nama_alternatif) => {
@@ -491,8 +493,11 @@
           Swal.fire({
             icon:'error',
             title: 'Kesalahan',
-            text: 'Menurut aturan metode TOPSIS, total bobotnya harus sama dengan 100!'
+            text: vue.total_weight != 100 ? 'Menurut aturan metode TOPSIS, total bobotnya harus sama dengan 100!' : vue.is_empty ? 'Semua alternatif wajib diberi nilai kriteria!' : ''
           })
+        },
+        emptyField: () => {
+          vue.range_field = isNaN(vue.range_field) ? '' : vue.range_field
         }
       },
       async mounted() {
