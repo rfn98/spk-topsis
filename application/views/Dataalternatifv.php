@@ -383,6 +383,39 @@
               <!-- button modal -->
                     <div class="modal-footer">
                         <!-- Button trigger modal hitung topsis -->
+                       <button type="button" class="btn btn-primary" v-on:click="getResult()" data-bs-toggle="modal" data-bs-target="#result">
+                        Next
+                        </button>
+                  </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="result" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Kesimpulan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <!-- modal body -->
+              <div class="modal-body row">
+                <div class="col-12">
+                  <span>Jadi, alternatif yang terpilih adalah {{alternatif_choosen}} dengan spesifikasi sebagai berikut.</span>
+                </div>
+                <div class="col-12">
+                  <table class="table table-borderless">
+                    <tr v-for="(item, index) in detail">
+                      <th>{{index}}</th>
+                      <td>{{item}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+  
+              <!-- button modal -->
+                    <div class="modal-footer">
+                        <!-- Button trigger modal hitung topsis -->
                        <button type="button" class="btn btn-primary" v-on:click="reload()" data-bs-toggle="modal" data-bs-target="#ranking">
                         Selesai
                         </button>
@@ -459,7 +492,10 @@
         emptyInputList: [],
         total_weight: localStorage.total_weight,
         is_empty: $('.td-nilai-alternatif').toArray().map(r => $(r).text()).filter(s => s == '-').length,
-        range_field: null
+        range_field: null,
+        listAlternatif: <?= json_encode($listAlternatif)?>,
+        detail: null,
+        alternatif_choosen: null
       },
       methods: {
         getAlternatifDetail: async (id_alternatif, kd_alternatif, nama_alternatif) => {
@@ -498,6 +534,12 @@
         },
         emptyField: () => {
           vue.range_field = isNaN(vue.range_field) ? '' : vue.range_field
+        },
+        getResult: () => {
+          console.log(vue.listAlternatif.filter(r => r.nama_alternatif == vue.listPreferences[0].nama_alternatif))
+          const alternatif = vue.listAlternatif.filter(r => r.nama_alternatif == vue.listPreferences[0].nama_alternatif)[0]
+          vue.alternatif_choosen = alternatif.nama_alternatif
+          vue.detail = JSON.parse(alternatif.detail)
         }
       },
       async mounted() {
